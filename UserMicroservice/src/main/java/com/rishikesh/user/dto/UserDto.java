@@ -13,7 +13,6 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Document(collection = "users")
 public class UserDto {
 
     @NotBlank(message = "Name is required and cannot be blank")
