@@ -1,33 +1,60 @@
-HELP.md
+# === Java / Spring Boot ===
 target/
+*.jar
+*.war
+*.ear
+
+# === Maven ===
 .mvn/wrapper/maven-wrapper.jar
-!**/src/main/**/target/
-!**/src/test/**/target/
+!/.mvn/wrapper/maven-wrapper.properties
 
-### STS ###
-.apt_generated
-.classpath
-.factorypath
-.project
-.settings
-.springBeans
-.sts4-cache
+# === Logs ===
+*.log
+logs/
+*.out
 
-### IntelliJ IDEA ###
-.idea
-*.iws
+# === Temporary Files ===
+*.tmp
+*.swp
+*.swo
+*.bak
+
+# === IntelliJ IDEA ===
+.idea/
 *.iml
-*.ipr
+*.iws
+out/
 
-### NetBeans ###
-/nbproject/private/
-/nbbuild/
-/dist/
-/nbdist/
-/.nb-gradle/
+# === VS Code ===
+.vscode/
+
+# === Eclipse ===
+.project
+.classpath
+.settings/
+bin/
+
+# === macOS / Windows ===
+.DS_Store
+Thumbs.db
+
+# === Environment Files (Secrets) ===
+.env
+*.env
+application-*.yml
+application-*.properties
+!application.yml  # keep your base config if it’s safe
+
+# === Docker ===
+/docker-data/
+/*.pid
+
+# === Node (if frontend lives here too) ===
+node_modules/
+dist/
 build/
-!**/src/main/**/build/
-!**/src/test/**/build/
 
-### VS Code ###
-
+# === Others ===
+*.zip
+*.tar
+*.gz
