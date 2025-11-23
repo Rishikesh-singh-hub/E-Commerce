@@ -1,6 +1,8 @@
 package com.rishikesh.user.configuration;
 
 import com.rishikesh.user.jwt.AuthTokenFilter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
@@ -15,6 +17,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 public class SecurityConfig {
 
+    Logger logger = LoggerFactory.getLogger(SecurityConfig.class);
     private final AuthTokenFilter authTokenFilter;
 
     public SecurityConfig(AuthTokenFilter authTokenFilter) {
@@ -23,7 +26,7 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-
+        logger.info("Security filter chain started");
          http.csrf(AbstractHttpConfigurer::disable)
               .cors(Customizer.withDefaults())
               .sessionManagement(session ->
@@ -31,7 +34,8 @@ public class SecurityConfig {
               )
                 .authorizeHttpRequests(
                         req -> req
-                                .requestMatchers("/api/**").permitAll()
+                                .requestMatchers("/api/signing","/api/signup").permitAll()
+                                .requestMatchers("/api/auth").authenticated()
                                 .anyRequest().authenticated()
                 );
                 http.addFilterBefore(authTokenFilter, UsernamePasswordAuthenticationFilter.class);

@@ -67,9 +67,8 @@ public class JwtUtils {
 
     }
 
-    public String generateJwt(String email) {
+    public String generateJwt(UserEntity entity) {
 
-        UserEntity entity = userRepo.findByEmail(email).orElseThrow();
         Date date = new Date();
         return Jwts.builder()
                 .subject(entity.getId())

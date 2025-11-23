@@ -1,12 +1,12 @@
-package com.rishikesh.user;
+package com.rishikesh.app;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class UserMicroservice {
+public class ECommerceApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(UserMicroservice.class,args);
+        SpringApplication.run(ECommerceApplication.class,args);
     }
 }

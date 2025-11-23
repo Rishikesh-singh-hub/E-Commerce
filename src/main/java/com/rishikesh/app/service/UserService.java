@@ -1,9 +1,6 @@
 package com.rishikesh.user.service;
 
-import com.rishikesh.user.dto.UserDto;
-import com.rishikesh.user.dto.UserLoginDto;
-import com.rishikesh.user.dto.UserMapper;
-import com.rishikesh.user.dto.UserResponse;
+import com.rishikesh.user.dto.*;
 import com.rishikesh.user.entity.UserEntity;
 import com.rishikesh.user.jwt.JwtUtils;
 import com.rishikesh.user.repository.UserRepo;
@@ -34,17 +31,18 @@ public class UserService {
         this.userRepo = userRepo;
     }
 
-    public UserLoginDto userLogin(UserDto userDto){
+    public UserLoginDto userLogin(UserRequest request){
         try{
 
             Authentication auth = authManager
-                    .authenticate(new UsernamePasswordAuthenticationToken(userDto.getEmail(),userDto.getPassword()));
+                    .authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(),request.getPassword()));
             SecurityContextHolder.getContext().setAuthentication(auth);
-            String jwt = jwtUtils.generateJwt(userDto.getEmail());
+            UserEntity entity = userRepo.findByEmail(request.getEmail()).orElseThrow();
+            String jwt = jwtUtils.generateJwt(entity);
             return UserLoginDto.builder()
-                    .name(userDto.getName())
-                    .email(userDto.getEmail())
-                    .address(userDto.getAddress())
+                    .name(entity.getName())
+                    .email(entity.getEmail())
+                    .address(entity.getAddress())
                     .jwt(jwt)
                     .build();
 
