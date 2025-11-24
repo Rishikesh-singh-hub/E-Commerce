@@ -1,8 +1,7 @@
-package com.rishikesh.user.jwt;
+package com.rishikesh.app.jwt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.io.IOException;
-import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;

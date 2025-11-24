@@ -1,4 +1,4 @@
-package com.rishikesh.user.exception;
+package com.rishikesh.app.exception;
 
 
 import io.jsonwebtoken.ExpiredJwtException;

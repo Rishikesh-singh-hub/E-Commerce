@@ -1,4 +1,4 @@
-package com.rishikesh.user.entity;
+package com.rishikesh.app.entity;
 
 import lombok.*;
 import org.springframework.data.annotation.Id;

@@ -1,6 +1,6 @@
-package com.rishikesh.user.dto;
+package com.rishikesh.app.dto;
 
-import com.rishikesh.user.entity.UserEntity;
+import com.rishikesh.app.entity.UserEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 

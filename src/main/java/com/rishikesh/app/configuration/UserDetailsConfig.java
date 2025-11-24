@@ -1,7 +1,7 @@
-package com.rishikesh.user.configuration;
+package com.rishikesh.app.configuration;
 
-import com.rishikesh.user.entity.UserEntity;
-import com.rishikesh.user.repository.UserRepo;
+import com.rishikesh.app.entity.UserEntity;
+import com.rishikesh.app.repository.UserRepo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
