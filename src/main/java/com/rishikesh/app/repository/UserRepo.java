@@ -1,7 +1,6 @@
-package com.rishikesh.user.repository;
+package com.rishikesh.app.repository;
 
-import com.rishikesh.user.entity.UserEntity;
-import org.apache.catalina.User;
+import com.rishikesh.app.entity.UserEntity;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.util.Optional;

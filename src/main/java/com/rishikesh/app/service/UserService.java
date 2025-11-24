@@ -1,9 +1,9 @@
-package com.rishikesh.user.service;
+package com.rishikesh.app.service;
 
-import com.rishikesh.user.dto.*;
-import com.rishikesh.user.entity.UserEntity;
-import com.rishikesh.user.jwt.JwtUtils;
-import com.rishikesh.user.repository.UserRepo;
+import com.rishikesh.app.dto.*;
+import com.rishikesh.app.entity.UserEntity;
+import com.rishikesh.app.jwt.JwtUtils;
+import com.rishikesh.app.repository.UserRepo;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

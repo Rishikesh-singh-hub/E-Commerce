@@ -1,10 +1,10 @@
-package com.rishikesh.user.dto;
+package com.rishikesh.app.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.*;
-import org.springframework.data.mongodb.core.mapping.Document;
+
 
 
 

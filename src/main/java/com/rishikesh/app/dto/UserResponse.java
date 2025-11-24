@@ -1,4 +1,4 @@
-package com.rishikesh.user.dto;
+package com.rishikesh.app.dto;
 
 
 import lombok.Builder;
