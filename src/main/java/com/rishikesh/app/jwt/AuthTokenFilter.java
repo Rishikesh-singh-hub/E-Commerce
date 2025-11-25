@@ -79,7 +79,6 @@ public class AuthTokenFilter extends OncePerRequestFilter {
             }
 
             // If everything ok, continue
-            filterChain.doFilter(request, response);
         }catch(MalformedJwtException | SignatureException | UnsupportedJwtException | InvalidTokenException e){
             SecurityContextHolder.clearContext();
             logger.warn("Invalid token: {}", e.toString());
