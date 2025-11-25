@@ -36,7 +36,7 @@ The goal of this project is to mirror a real-world backend: authentication, auth
 - **Framework:** Spring Boot  
 - **Security:** Spring Security, JWT  
 - **Build Tool:** Maven  
-- **Database:** [MySQL / PostgreSQL / H2] (update this)  
+- **Database:** [MySQL / PostgreSQL / H2]
 - **Others:** Lombok, Validation, etc.
 
 ---
