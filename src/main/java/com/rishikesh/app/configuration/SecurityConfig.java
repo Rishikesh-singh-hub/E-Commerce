@@ -35,6 +35,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(
                         req -> req
                                 .requestMatchers("/api/signing","/api/signup").permitAll()
+                                .requestMatchers("/api/products/**").permitAll()
                                 .requestMatchers("/api/auth").authenticated()
                                 .anyRequest().authenticated()
                 );

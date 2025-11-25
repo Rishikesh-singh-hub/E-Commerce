@@ -1,9 +1,9 @@
 package com.rishikesh.app.controller;
 
-import com.rishikesh.app.dto.UserDto;
-import com.rishikesh.app.dto.UserLoginDto;
-import com.rishikesh.app.dto.UserRequest;
-import com.rishikesh.app.dto.UserResponse;
+import com.rishikesh.app.dto.user.UserDto;
+import com.rishikesh.app.dto.user.UserLoginDto;
+import com.rishikesh.app.dto.user.UserRequest;
+import com.rishikesh.app.dto.user.UserResponse;
 import com.rishikesh.app.service.UserService;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;

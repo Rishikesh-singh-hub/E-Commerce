@@ -1,4 +1,4 @@
-package com.rishikesh.app.dto;
+package com.rishikesh.app.dto.user;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
