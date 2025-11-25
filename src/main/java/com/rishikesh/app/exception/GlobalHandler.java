@@ -7,6 +7,7 @@ import io.jsonwebtoken.UnsupportedJwtException;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -39,6 +40,15 @@ public class GlobalHandler {
         return ResponseEntity
                 .status(HttpStatus.UNAUTHORIZED)
                 .body(ex.getMessage());
+    }
+
+    @ExceptionHandler (InternalAuthenticationServiceException.class)
+    public ResponseEntity<ErrorResponse> interAuthServiceEx(InternalAuthenticationServiceException ex){
+        return ResponseEntity.badRequest().body(
+                ErrorResponse.builder().code(400)
+                        .message("Invalid Username and Password")
+                        .build()
+        );
     }
 
 }
