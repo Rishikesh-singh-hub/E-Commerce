@@ -8,7 +8,7 @@ target/
 .mvn/wrapper/maven-wrapper.jar
 !/.mvn/wrapper/maven-wrapper.properties
 
-src.main.resources.application.properties
+src/main/resources
 
 # === Logs ===
 *.log
