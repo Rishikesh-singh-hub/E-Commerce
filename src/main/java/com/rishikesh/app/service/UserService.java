@@ -1,6 +1,6 @@
 package com.rishikesh.app.service;
 
-import com.rishikesh.app.dto.*;
+import com.rishikesh.app.dto.user.*;
 import com.rishikesh.app.entity.UserEntity;
 import com.rishikesh.app.jwt.JwtUtils;
 import com.rishikesh.app.repository.UserRepo;
@@ -8,7 +8,6 @@ import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
