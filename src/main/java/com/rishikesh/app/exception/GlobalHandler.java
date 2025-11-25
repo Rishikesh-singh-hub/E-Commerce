@@ -5,6 +5,7 @@ import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.UnsupportedJwtException;
 import org.springframework.dao.DuplicateKeyException;
+import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
@@ -47,6 +48,15 @@ public class GlobalHandler {
         return ResponseEntity.badRequest().body(
                 ErrorResponse.builder().code(400)
                         .message("Invalid Username and Password")
+                        .build()
+        );
+    }
+
+    @ExceptionHandler( ChangeSetPersister.NotFoundException.class)
+    public ResponseEntity<ErrorResponse> changeSetPersister(ChangeSetPersister.NotFoundException ex){
+        return  ResponseEntity.badRequest().body(
+                ErrorResponse.builder().code(400)
+                        .message("Item not found in cart")
                         .build()
         );
     }
