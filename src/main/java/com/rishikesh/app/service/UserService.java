@@ -8,6 +8,7 @@ import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -32,7 +33,6 @@ public class UserService {
     }
 
     public UserLoginDto userLogin(UserRequest request){
-        try{
 
             Authentication auth = authManager
                     .authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(),request.getPassword()));
@@ -47,10 +47,7 @@ public class UserService {
                     .build();
 
 
-        }catch (Exception e){
-            logger.info(e.getMessage());
-        }
-        return null;
+
     }
 
     public UserResponse signupUser(@Valid UserDto userDto) {
