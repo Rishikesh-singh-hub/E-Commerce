@@ -4,6 +4,8 @@ import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.math.BigDecimal;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -14,6 +16,6 @@ public class CartItemEntity {
     private String id; // optional client-generated id or null
     private String productId;
     private String productName;
-    private Double price;
+    private BigDecimal price;
     private Integer quantity;
 }

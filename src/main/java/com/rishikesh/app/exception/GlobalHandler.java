@@ -17,6 +17,16 @@ import java.security.SignatureException;
 @RestControllerAdvice
 public class GlobalHandler {
 
+    @ExceptionHandler(NullPointerException.class)
+    public ResponseEntity<ErrorResponse> nullPointer(NullPointerException ex){
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(ErrorResponse.builder()
+                        .code(400)
+                        .message(ex.getMessage())
+                        .build()
+                );
+    }
+
     @ExceptionHandler(DuplicateKeyException.class)
     public ResponseEntity<?> handleDuplicateKey(DuplicateKeyException ex) {
         return ResponseEntity
