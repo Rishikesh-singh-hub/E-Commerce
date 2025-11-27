@@ -1,6 +1,7 @@
 package com.rishikesh.app.service;
 
 
+import com.rishikesh.app.dto.order.OrderItemReqDto;
 import com.rishikesh.app.dto.product.ProductDto;
 import com.rishikesh.app.entity.ProductEntity;
 import com.rishikesh.app.mapper.ProductMapper;
@@ -40,5 +41,13 @@ public class ProductService {
         productRepo.save(entity);
         return entity.getId();
 
+    }
+
+    public ProductEntity validateProduct(OrderItemReqDto productReq) {
+
+        ProductEntity product =productRepo.findByIdAndStockGreaterThanEqual(productReq.getProductId(),productReq.getQuantity()).orElse(null);
+        if (product != null)
+            return product;
+        return null;
     }
 }

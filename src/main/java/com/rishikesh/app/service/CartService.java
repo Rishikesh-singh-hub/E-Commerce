@@ -2,13 +2,11 @@ package com.rishikesh.app.service;
 
 
 import com.rishikesh.app.dto.cart.AddToCartReqDto;
-import com.rishikesh.app.dto.cart.CartItemDto;
 import com.rishikesh.app.dto.cart.CartResDto;
 import com.rishikesh.app.entity.CartEntity;
 import com.rishikesh.app.entity.CartItemEntity;
 import com.rishikesh.app.entity.ProductEntity;
 import com.rishikesh.app.mapper.CartMapper;
-import com.rishikesh.app.repository.CartItemRepo;
 import com.rishikesh.app.repository.CartRepo;
 import com.rishikesh.app.repository.ProductRepo;
 import org.slf4j.Logger;
@@ -24,12 +22,10 @@ public class CartService {
     Logger logger = LoggerFactory.getLogger(CartService.class);
 
     private final CartRepo cartRepo;
-    private final CartItemRepo cartItemRepo;
     private final ProductRepo productRepo;
 
-    public CartService(CartRepo cartRepo, CartItemRepo cartItemRepo, ProductRepo productRepo) {
+    public CartService(CartRepo cartRepo , ProductRepo productRepo) {
         this.cartRepo = cartRepo;
-        this.cartItemRepo = cartItemRepo;
         this.productRepo = productRepo;
     }
 
@@ -39,36 +35,6 @@ public class CartService {
         return CartMapper.toResponse(cartEntity);
 
     }
-
-//    public CartResDto addItem(String userId, String productId, int qty) {
-//
-//        ProductEntity productEntity = productRepo.findById(productId).orElseThrow(() -> new RuntimeException("Product not found"));
-//
-//        CartEntity cart = CartMapper.toEntity(getOrCreateCart(userId),userId);
-//        logger.info("items in cart {}",cart.getItems().size());
-//        List<CartItemEntity> existing = cart.getItems();
-//        CartItemEntity itemEntity =existing.stream()
-//                .filter(i -> i.getProductId().equals(productId))
-//                .findFirst().orElse(null);
-//        if (itemEntity == null) {
-//            CartItemEntity cartItemEntity = CartItemEntity.builder()
-//                    .id(UUID.randomUUID().toString())
-//                    .productId(productEntity.getId())
-//                    .productName(productEntity.getName())
-//                    .price(productEntity.getPrice())
-//                    .quantity(qty)
-//                    .build();
-//            existing.add(cartItemEntity);
-//            logger.info("product added to cart with id : {}",cartItemEntity.getProductId());
-//        } else {
-//            itemEntity.setQuantity(itemEntity.getQuantity() + qty);
-//        }
-//        cart.setItems(existing);
-//
-//        logger.info("total after adding items in cart {}",cart.getItems().size());
-//         cartRepo.save(cart);
-//        return CartMapper.toResponse(cart);
-//    }
 
     public CartResDto removeItem(String userId, AddToCartReqDto reqDto) throws ChangeSetPersister.NotFoundException {
         CartEntity cart = CartMapper.toEntity(getOrCreateCart(userId),userId);

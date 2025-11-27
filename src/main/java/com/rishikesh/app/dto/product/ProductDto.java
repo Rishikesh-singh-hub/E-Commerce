@@ -2,6 +2,8 @@ package com.rishikesh.app.dto.product;
 
 import lombok.*;
 
+import java.math.BigDecimal;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -9,6 +11,6 @@ import lombok.*;
 public class ProductDto {
     private String name;
     private String description;
-    private Double price;
+    private BigDecimal price;
     private Integer stock;
 }
