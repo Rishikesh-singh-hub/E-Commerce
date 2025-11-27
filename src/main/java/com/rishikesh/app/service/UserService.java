@@ -1,6 +1,6 @@
 package com.rishikesh.app.service;
 
-import com.rishikesh.app.dto.*;
+import com.rishikesh.app.dto.user.*;
 import com.rishikesh.app.entity.UserEntity;
 import com.rishikesh.app.jwt.JwtUtils;
 import com.rishikesh.app.repository.UserRepo;
@@ -32,7 +32,6 @@ public class UserService {
     }
 
     public UserLoginDto userLogin(UserRequest request){
-        try{
 
             Authentication auth = authManager
                     .authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(),request.getPassword()));
@@ -47,10 +46,7 @@ public class UserService {
                     .build();
 
 
-        }catch (Exception e){
-            logger.info(e.getMessage());
-        }
-        return null;
+
     }
 
     public UserResponse signupUser(@Valid UserDto userDto) {

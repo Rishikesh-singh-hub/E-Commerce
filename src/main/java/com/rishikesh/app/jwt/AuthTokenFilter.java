@@ -6,6 +6,7 @@ import com.rishikesh.app.configuration.UserDetailsConfig;
 import com.rishikesh.app.exception.ErrorResponse;
 import com.rishikesh.app.entity.UserEntity;
 import com.rishikesh.app.exception.InvalidTokenException;
+import com.rishikesh.app.exception.JwtTokenExpiredException;
 import com.rishikesh.app.repository.UserRepo;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -78,7 +79,6 @@ public class AuthTokenFilter extends OncePerRequestFilter {
             }
 
             // If everything ok, continue
-            filterChain.doFilter(request, response);
         }catch(MalformedJwtException | SignatureException | UnsupportedJwtException | InvalidTokenException e){
             SecurityContextHolder.clearContext();
             logger.warn("Invalid token: {}", e.toString());
@@ -89,8 +89,13 @@ public class AuthTokenFilter extends OncePerRequestFilter {
         } catch (ExpiredJwtException |
                 IllegalArgumentException  |
                 UsernameNotFoundException e
-        ){logger.info(e.getMessage());}
-
+        ) {
+            SecurityContextHolder.clearContext();
+            logger.warn(e.getMessage());
+            AuthenticationException authEx = new JwtTokenExpiredException("Jwt_Token_Expired");
+            authEntryPointJwt.commence(request, response, authEx);
+            return;
+        }
         filterChain.doFilter(request,response);
 
     }
