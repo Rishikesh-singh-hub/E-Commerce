@@ -35,10 +35,11 @@ public class SecurityConfig {
                 .authorizeHttpRequests(
                         req -> req
                                 .requestMatchers("/api/signing","/api/signup").permitAll()
-                                .requestMatchers("/api/products/**").permitAll()
+                                .requestMatchers("/api/products/{id}","/api/products").authenticated()
+                                .requestMatchers("/api/products/all").permitAll()
                                 .requestMatchers("/api/cart/**","/api/cart").permitAll()
                                 .requestMatchers("/api/auth").authenticated()
-                                .requestMatchers("/api/order","/api/order/**").permitAll()
+                                .requestMatchers("/api/order","/api/order/**").authenticated()
                                 .anyRequest().authenticated()
                 );
                 http.addFilterBefore(authTokenFilter, UsernamePasswordAuthenticationFilter.class);

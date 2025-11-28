@@ -6,7 +6,7 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 
 public interface BillRepo extends MongoRepository<BillEntity,String> {
     public BillEntity findByOrderId (String orderId);
-    void deleteByIdAndStatus(String id, Status status);
+    long deleteByUserIdAndStatus(String id, Status status);
 
 
 }

@@ -46,8 +46,47 @@ public class ProductService {
     public ProductEntity validateProduct(OrderItemReqDto productReq) {
 
         ProductEntity product =productRepo.findByIdAndStockGreaterThanEqual(productReq.getProductId(),productReq.getQuantity()).orElse(null);
-        if (product != null)
-            return product;
+        if (product != null) {
+
+            ProductEntity userProduct = ProductEntity.builder()
+                    .id(product.getId())
+                    .name(product.getName())
+                    .description(product.getDescription())
+                    .price(product.getPrice())
+                    .stock(productReq.getQuantity())
+                    .build();
+
+            return userProduct;
+        }
         return null;
+    }
+
+    public  void  updateProduct(boolean add, int qty, ProductEntity product){
+
+        ProductEntity stockProduct = productRepo.findById(product.getId()).orElse(null);
+
+
+        if (add) {
+
+            ProductEntity updatedProduct = ProductEntity.builder()
+                    .id(product.getId())
+                    .name(product.getName())
+                    .description(product.getDescription())
+                    .price(product.getPrice())
+                    .stock(stockProduct.getStock() + product.getStock())
+                    .build();
+            productRepo.save(updatedProduct);
+        }else{
+            ProductEntity updatedProduct = ProductEntity.builder()
+                    .id(product.getId())
+                    .name(product.getName())
+                    .description(product.getDescription())
+                    .price(product.getPrice())
+                    .stock(stockProduct.getStock() - product.getStock())
+                    .build();
+            productRepo.save(updatedProduct);
+        }
+
+
     }
 }
