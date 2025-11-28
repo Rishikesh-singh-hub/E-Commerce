@@ -3,17 +3,17 @@ package com.rishikesh.app.service;
 
 import com.rishikesh.app.dto.cart.AddToCartReqDto;
 import com.rishikesh.app.dto.cart.CartResDto;
-import com.rishikesh.app.entity.CartEntity;
-import com.rishikesh.app.entity.CartItemEntity;
-import com.rishikesh.app.entity.ProductEntity;
+import com.rishikesh.app.entity.*;
 import com.rishikesh.app.mapper.CartMapper;
 import com.rishikesh.app.repository.CartRepo;
 import com.rishikesh.app.repository.ProductRepo;
+import com.rishikesh.app.repository.UserRepo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 
@@ -22,18 +22,36 @@ public class CartService {
     Logger logger = LoggerFactory.getLogger(CartService.class);
 
     private final CartRepo cartRepo;
+    private final UserRepo userRepo;
     private final ProductRepo productRepo;
 
-    public CartService(CartRepo cartRepo , ProductRepo productRepo) {
+    public CartService(CartRepo cartRepo, UserRepo userRepo, ProductRepo productRepo) {
         this.cartRepo = cartRepo;
+        this.userRepo = userRepo;
         this.productRepo = productRepo;
     }
 
     public CartResDto getOrCreateCart(String userId) {
         CartEntity cartEntity= cartRepo.findByUserId(userId)
-                .orElseGet(() -> cartRepo.save(CartEntity.builder().userId(userId).build()));
+                .orElseGet(() -> cartRepo.save(newCart(userId)));
         return CartMapper.toResponse(cartEntity);
 
+    }
+
+    private CartEntity newCart(String userId){
+
+        UserEntity entity = userRepo.findById(userId).orElse(null);
+
+        if(entity != null){
+            return CartEntity.builder()
+                    .id(UUID.randomUUID().toString())
+                    .userId(entity.getId())
+                    .status(Status.DRAFT)
+                    .updatedAt(Instant.now())
+                    .build();
+        }
+
+        return null;
     }
 
     public CartResDto removeItem(String userId, AddToCartReqDto reqDto) throws ChangeSetPersister.NotFoundException {
@@ -66,10 +84,10 @@ public class CartService {
         return null;
     }
 
-    public CartEntity clearCart(String userId) {
+    public CartResDto clearCart(String userId) {
         CartEntity cart = CartMapper.toEntity(getOrCreateCart(userId),userId);
         cart.getItems().clear();
-        return cartRepo.save(cart);
+        return CartMapper.toResponse(cartRepo.save(cart));
     }
 
     public CartResDto addItem(String userId, String productId, int qty) {

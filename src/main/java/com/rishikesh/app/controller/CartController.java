@@ -4,7 +4,6 @@ package com.rishikesh.app.controller;
 import com.rishikesh.app.dto.cart.AddToCartReqDto;
 import com.rishikesh.app.dto.cart.CartResDto;
 import com.rishikesh.app.jwt.JwtUtils;
-import com.rishikesh.app.entity.CartEntity;
 import com.rishikesh.app.service.CartService;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletRequest;
@@ -57,7 +56,7 @@ public class CartController {
     }
 
     @GetMapping("/clear")
-    public ResponseEntity<CartEntity> clear(HttpServletRequest servletRequest) {
+    public ResponseEntity<CartResDto> clear(HttpServletRequest servletRequest) {
         String userId = getUserIdFromRequest(servletRequest);
         return ResponseEntity.ok(svc.clearCart(userId));
     }
