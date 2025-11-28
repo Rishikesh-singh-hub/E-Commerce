@@ -26,10 +26,10 @@ public class CartController {
         this.jwtUtils = jwtUtils;
     }
 
-    @GetMapping("/{userId}")
-    public ResponseEntity<CartResDto> getCart(@PathVariable String userId,
-                                              HttpServletRequest request) {
+    @GetMapping
+    public ResponseEntity<CartResDto> getCart(HttpServletRequest request) {
 
+        String userId = getUserIdFromRequest(request);
         CartResDto resDto = svc.getOrCreateCart(userId);
         return ResponseEntity.ok(resDto);
     }
@@ -44,10 +44,11 @@ public class CartController {
         return ResponseEntity.ok(resDto);
     }
 
-    @DeleteMapping("/{userId}/remove")
-    public ResponseEntity<?> remove(@PathVariable String userId,
+    @DeleteMapping("/remove")
+    public ResponseEntity<?> remove(HttpServletRequest request,
                                     @Valid @RequestBody AddToCartReqDto req)
                                             throws ChangeSetPersister.NotFoundException {
+        String userId = getUserIdFromRequest(request);
         CartResDto resDto = svc.removeItem(userId,req);
         if (resDto != null){
             return ResponseEntity.ok(resDto);
@@ -55,8 +56,9 @@ public class CartController {
         return ResponseEntity.badRequest().body("Cart Empty");
     }
 
-    @PostMapping("/{userId}/clear")
-    public ResponseEntity<CartEntity> clear(@PathVariable String userId) {
+    @GetMapping("/clear")
+    public ResponseEntity<CartEntity> clear(HttpServletRequest servletRequest) {
+        String userId = getUserIdFromRequest(servletRequest);
         return ResponseEntity.ok(svc.clearCart(userId));
     }
 
