@@ -35,8 +35,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(
                         req -> req
                                 .requestMatchers("/api/signing","/api/signup").permitAll()
-                                .requestMatchers("/api/products/{id}","/api/products").authenticated()
-                                .requestMatchers("/api/products/all").permitAll()
+                                .requestMatchers("/api/products/auth","/api/products/auth/**").authenticated()
+                                .requestMatchers("/api/products/public/**").permitAll()
                                 .requestMatchers("/api/cart/**","/api/cart").authenticated()
                                 .requestMatchers("/api/auth").authenticated()
                                 .requestMatchers("/api/order","/api/order/**").authenticated()

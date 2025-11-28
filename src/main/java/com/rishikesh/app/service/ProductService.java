@@ -6,12 +6,15 @@ import com.rishikesh.app.dto.product.ProductDto;
 import com.rishikesh.app.entity.ProductEntity;
 import com.rishikesh.app.mapper.ProductMapper;
 import com.rishikesh.app.repository.ProductRepo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
 public class ProductService {
+    Logger logger = LoggerFactory.getLogger(ProductService.class);
     private final ProductRepo productRepo;
 
     public ProductService(ProductRepo productRepo) {
@@ -87,6 +90,14 @@ public class ProductService {
             productRepo.save(updatedProduct);
         }
 
+
+    }
+
+    public List<ProductDto> getByName(String productName) {
+
+        List<ProductEntity> productEntities = productRepo.findAllByNameContainingIgnoreCase(productName);
+        List<ProductDto> dtos = productEntities.stream().map(ProductMapper::toDto).toList();
+        return dtos;
 
     }
 }
