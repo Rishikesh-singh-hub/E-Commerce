@@ -29,7 +29,7 @@ public class ProductController {
         return ResponseEntity.ok(svc.get(id));
     }
 
-    @GetMapping
+    @GetMapping("/all")
     public ResponseEntity<List<ProductEntity>> list() { return ResponseEntity.ok(svc.list()); }
 
     @PutMapping("/{id}")

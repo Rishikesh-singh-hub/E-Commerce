@@ -3,8 +3,10 @@ package com.rishikesh.app.controller;
 
 import com.rishikesh.app.dto.cart.AddToCartReqDto;
 import com.rishikesh.app.dto.cart.CartResDto;
+import com.rishikesh.app.jwt.JwtUtils;
 import com.rishikesh.app.entity.CartEntity;
 import com.rishikesh.app.service.CartService;
+import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
@@ -18,8 +20,11 @@ import org.springframework.web.bind.annotation.*;
 public class CartController {
     Logger logger = LoggerFactory.getLogger(CartController.class);
     private final CartService svc;
+    private final JwtUtils jwtUtils;
 
-    public CartController(CartService svc) { this.svc = svc; }
+    public CartController(CartService svc, JwtUtils jwtUtils) { this.svc = svc;
+        this.jwtUtils = jwtUtils;
+    }
 
     @GetMapping("/{userId}")
     public ResponseEntity<CartResDto> getCart(@PathVariable String userId,
@@ -29,11 +34,12 @@ public class CartController {
         return ResponseEntity.ok(resDto);
     }
 
-    @PostMapping("/{userId}/add")
+    @PostMapping("/add")
     public ResponseEntity<CartResDto> addItem(
-            @PathVariable String userId,
+            HttpServletRequest servletRequest,
             @Valid @RequestBody AddToCartReqDto req) {
 
+        String userId = getUserIdFromRequest(servletRequest);
         CartResDto resDto = svc.addItem(userId, req.getProductId(), req.getQuantity());
         return ResponseEntity.ok(resDto);
     }
@@ -52,5 +58,18 @@ public class CartController {
     @PostMapping("/{userId}/clear")
     public ResponseEntity<CartEntity> clear(@PathVariable String userId) {
         return ResponseEntity.ok(svc.clearCart(userId));
+    }
+
+
+    private String getUserIdFromRequest(HttpServletRequest request){
+
+        String jwt = request.getHeader("Authorization").substring(7);
+        Claims claims = jwtUtils.parseClaims(jwt);
+
+        String userId = claims.getSubject();
+        if (userId == null || userId.isBlank()) {
+            throw new IllegalArgumentException("missing subject");
+        }
+        return userId;
     }
 }
