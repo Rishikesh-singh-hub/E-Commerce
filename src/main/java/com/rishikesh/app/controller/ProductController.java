@@ -16,28 +16,37 @@ public class ProductController {
 
     public ProductController(ProductService svc) { this.svc = svc; }
 
-    @PostMapping
+    @PostMapping("/auth")
     public ResponseEntity<ProductDto> create(@RequestBody ProductDto dto) {
 
        String id =  svc.createProduct(dto);
         return ResponseEntity.created(URI.create("/api/products/" + id)).body(dto);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/auth/{id}")
     public ResponseEntity<ProductEntity> get(@PathVariable String id) {
 
         return ResponseEntity.ok(svc.get(id));
     }
 
-    @GetMapping("/all")
+    @GetMapping("/public/{productName}")
+    public ResponseEntity<?> getByName(@PathVariable String productName) {
+        List<ProductDto>  dtos = svc.getByName(productName);
+        if(dtos.isEmpty()){
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(dtos);
+    }
+
+    @GetMapping("/public/all")
     public ResponseEntity<List<ProductEntity>> list() { return ResponseEntity.ok(svc.list()); }
 
-    @PutMapping("/{id}")
+    @PutMapping("/auth/{id}")
     public ResponseEntity<ProductEntity> update(@PathVariable String id, @RequestBody ProductDto dto) {
         return ResponseEntity.ok(svc.update(id, dto));
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/auth/{id}")
     public ResponseEntity<Void> delete(@PathVariable String id) {
         svc.delete(id);
         return ResponseEntity.noContent().build();
