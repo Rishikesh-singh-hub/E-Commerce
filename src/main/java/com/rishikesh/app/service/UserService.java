@@ -23,12 +23,14 @@ public class UserService {
     private final JwtUtils jwtUtils;
     private final UserMapper userMapper;
     private final UserRepo userRepo;
+    private final EmailService emailService;
 
-    public UserService(AuthenticationManager authManager, JwtUtils jwtUtils, UserMapper userMapper, UserRepo userRepo) {
+    public UserService(AuthenticationManager authManager, JwtUtils jwtUtils, UserMapper userMapper, UserRepo userRepo, EmailService emailService) {
         this.authManager = authManager;
         this.jwtUtils = jwtUtils;
         this.userMapper = userMapper;
         this.userRepo = userRepo;
+        this.emailService = emailService;
     }
 
     public UserLoginDto userLogin(UserRequest request){
@@ -38,6 +40,7 @@ public class UserService {
             SecurityContextHolder.getContext().setAuthentication(auth);
             UserEntity entity = userRepo.findByEmail(request.getEmail()).orElseThrow();
             String jwt = jwtUtils.generateJwt(entity);
+            emailService.sendEmail("rs1848962@gmail.com","test","test");
             return UserLoginDto.builder()
                     .name(entity.getName())
                     .email(entity.getEmail())
@@ -54,6 +57,7 @@ public class UserService {
         UserEntity entity = userMapper.toUserEntity(userDto);
         userRepo.save(entity);
         return  userMapper.toUserResponse(entity);
+
 
     }
 }

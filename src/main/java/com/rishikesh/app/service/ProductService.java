@@ -4,18 +4,27 @@ package com.rishikesh.app.service;
 import com.rishikesh.app.dto.order.OrderItemReqDto;
 import com.rishikesh.app.dto.product.ProductDto;
 import com.rishikesh.app.entity.ProductEntity;
+import com.rishikesh.app.entity.SellerEntity;
+import com.rishikesh.app.entity.UserEntity;
 import com.rishikesh.app.mapper.ProductMapper;
 import com.rishikesh.app.repository.ProductRepo;
+import com.rishikesh.app.repository.SellerRepo;
+import com.rishikesh.app.repository.UserRepo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
 public class ProductService {
+    Logger logger = LoggerFactory.getLogger(ProductService.class);
     private final ProductRepo productRepo;
+    private final SellerRepo sellerRepo;
 
-    public ProductService(ProductRepo productRepo) {
+    public ProductService(ProductRepo productRepo, SellerRepo sellerRepo) {
         this.productRepo = productRepo;
+        this.sellerRepo = sellerRepo;
     }
 
     public ProductEntity create(ProductEntity p) { return productRepo.save(p); }
@@ -35,10 +44,13 @@ public class ProductService {
 
     public void delete(String id) { productRepo.deleteById(id); }
 
-    public String createProduct(ProductDto dto) {
+    public String createProduct(ProductDto dto,String userId) {
 
         ProductEntity entity= ProductMapper.toEntity(dto);
         productRepo.save(entity);
+        SellerEntity sellerEntity = sellerRepo.findByUserId(userId);
+        sellerEntity.getProductIds().add(entity.getId());
+        sellerRepo.save(sellerEntity);
         return entity.getId();
 
     }
@@ -46,8 +58,55 @@ public class ProductService {
     public ProductEntity validateProduct(OrderItemReqDto productReq) {
 
         ProductEntity product =productRepo.findByIdAndStockGreaterThanEqual(productReq.getProductId(),productReq.getQuantity()).orElse(null);
-        if (product != null)
-            return product;
+        if (product != null) {
+
+            ProductEntity userProduct = ProductEntity.builder()
+                    .id(product.getId())
+                    .name(product.getName())
+                    .description(product.getDescription())
+                    .price(product.getPrice())
+                    .stock(productReq.getQuantity())
+                    .build();
+
+            return userProduct;
+        }
         return null;
+    }
+
+    public  void  updateProduct(boolean add, int qty, ProductEntity product){
+
+        ProductEntity stockProduct = productRepo.findById(product.getId()).orElse(null);
+
+
+        if (add) {
+
+            ProductEntity updatedProduct = ProductEntity.builder()
+                    .id(product.getId())
+                    .name(product.getName())
+                    .description(product.getDescription())
+                    .price(product.getPrice())
+                    .stock(stockProduct.getStock() + product.getStock())
+                    .build();
+            productRepo.save(updatedProduct);
+        }else{
+            ProductEntity updatedProduct = ProductEntity.builder()
+                    .id(product.getId())
+                    .name(product.getName())
+                    .description(product.getDescription())
+                    .price(product.getPrice())
+                    .stock(stockProduct.getStock() - product.getStock())
+                    .build();
+            productRepo.save(updatedProduct);
+        }
+
+
+    }
+
+    public List<ProductDto> getByName(String productName) {
+
+        List<ProductEntity> productEntities = productRepo.findAllByNameContainingIgnoreCase(productName);
+        List<ProductDto> dtos = productEntities.stream().map(ProductMapper::toDto).toList();
+        return dtos;
+
     }
 }
