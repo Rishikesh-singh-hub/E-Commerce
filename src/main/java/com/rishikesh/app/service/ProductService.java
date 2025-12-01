@@ -4,8 +4,12 @@ package com.rishikesh.app.service;
 import com.rishikesh.app.dto.order.OrderItemReqDto;
 import com.rishikesh.app.dto.product.ProductDto;
 import com.rishikesh.app.entity.ProductEntity;
+import com.rishikesh.app.entity.SellerEntity;
+import com.rishikesh.app.entity.UserEntity;
 import com.rishikesh.app.mapper.ProductMapper;
 import com.rishikesh.app.repository.ProductRepo;
+import com.rishikesh.app.repository.SellerRepo;
+import com.rishikesh.app.repository.UserRepo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -16,9 +20,11 @@ import java.util.List;
 public class ProductService {
     Logger logger = LoggerFactory.getLogger(ProductService.class);
     private final ProductRepo productRepo;
+    private final SellerRepo sellerRepo;
 
-    public ProductService(ProductRepo productRepo) {
+    public ProductService(ProductRepo productRepo, SellerRepo sellerRepo) {
         this.productRepo = productRepo;
+        this.sellerRepo = sellerRepo;
     }
 
     public ProductEntity create(ProductEntity p) { return productRepo.save(p); }
@@ -38,10 +44,13 @@ public class ProductService {
 
     public void delete(String id) { productRepo.deleteById(id); }
 
-    public String createProduct(ProductDto dto) {
+    public String createProduct(ProductDto dto,String userId) {
 
         ProductEntity entity= ProductMapper.toEntity(dto);
         productRepo.save(entity);
+        SellerEntity sellerEntity = sellerRepo.findByUserId(userId);
+        sellerEntity.getProductIds().add(entity.getId());
+        sellerRepo.save(sellerEntity);
         return entity.getId();
 
     }
