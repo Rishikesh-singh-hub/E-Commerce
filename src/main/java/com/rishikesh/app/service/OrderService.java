@@ -90,7 +90,7 @@ public class OrderService {
 //
 //    }
 
-    private OrderTotalResult total(List<ProductEntity> productEntities,
+    private BigDecimal total(List<ProductEntity> productEntities,
                                    List<OrderItemReqDto> orderItemsDtoList) {
 
         // Map: productId → ProductEntity
@@ -114,23 +114,24 @@ public class OrderService {
             total = total.add(line);
 
             // create a copy and set stock = qty
-            ProductEntity copy = new ProductEntity();
-            copy.setId(orig.getId());
-            copy.setName(orig.getName());
-            copy.setDescription(orig.getDescription());
-            copy.setPrice(orig.getPrice());
-            copy.setStock(qty);         // this is your "qty field"
+//            ProductEntity copy = new ProductEntity();
+//            copy.setId(orig.getId());
+//            copy.setName(orig.getName());
+//            copy.setDescription(orig.getDescription());
+//            copy.setPrice(orig.getPrice());
+//            copy.setStock(qty);         // this is your "qty field"
 
-            updatedProducts.add(copy);
+//            updatedProducts.add(copy);
         }
-        return new OrderTotalResult(updatedProducts, total);
+        return total;
     }
 
     public BillResDto generateBill(String userId,OrderReqDto orderRequest){
 
         logger.info("Checking and removing if any previous draft with user is found....");
 
-        billRepo.deleteByIdAndStatus(userId,Status.DRAFT);
+        long removed = billRepo.deleteByUserIdAndStatus(userId,Status.DRAFT);
+        logger.info("removed draft bill: {}",removed);
         orderRepo.deleteByUserIdAndStatus(userId,Status.DRAFT);
         logger.info("generating Bill request received...");
         List<OrderItemReqDto> orderItemsDtoList = orderRequest.getItems();
@@ -141,8 +142,9 @@ public class OrderService {
 
         logger.info("Validated Products from stocks ...");
 
-        OrderTotalResult totalResult = total(productEntities,orderItemsDtoList);
-        List<OrderItem> orderItems = totalResult.getUpdatedProducts().stream()
+//        OrderTotalResult totalResult = total(productEntities,orderItemsDtoList);
+
+        List<OrderItem> orderItems = productEntities.stream()
                 .map(OrderMapper::toOrderItem)
                 .toList();
 
@@ -152,7 +154,7 @@ public class OrderService {
                 .idempotencyKey(null)
                 .items(orderItems)
                 .status(Status.DRAFT)
-                .total(totalResult.getTotal())
+                .total(total(productEntities,orderItemsDtoList))
                 .build();
 
         orderRepo.save(newOrder);
@@ -164,7 +166,7 @@ public class OrderService {
                 .id(UUID.randomUUID().toString())
                 .orderId(newOrder.getId())
                 .userId(userId)
-                .productsList(totalResult.getUpdatedProducts())
+                .productsList(productEntities)
                 .amount(newOrder.getTotal())
                 .paymentId(null)
                 .idempotencyKey(null)
@@ -208,6 +210,11 @@ return BillMapper.toDto(savedBill);
                     .issuedAt(entity.getIssuedAt())
                     .updatedAt(Instant.now())
                     .build();
+
+            logger.info("products getting updated in stock...");
+            entity.getProductsList().forEach(
+                    product -> productService.updateProduct(false,product.getStock(),product)
+            );
 
             billRepo.save(entity);
             return BillMapper.toDto(entity);

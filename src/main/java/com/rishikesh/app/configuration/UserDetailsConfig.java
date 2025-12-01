@@ -35,7 +35,7 @@ public class UserDetailsConfig implements UserDetailsService {
         return User.builder()
                 .username(entity.getName())
                 .password(entity.getPassword())
-                .roles(entity.getRole())
+                .roles(String.valueOf(entity.getRole()))
                 .build();
     }
 

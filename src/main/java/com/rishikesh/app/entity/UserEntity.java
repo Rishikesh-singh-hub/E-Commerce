@@ -6,6 +6,7 @@ import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -25,8 +26,8 @@ public class UserEntity {
 
     private String password;   // Always hashed (BCrypt)
 
-    @Builder.Default
-    private String role = "CUSTOMER" ;       // CUSTOMER, ADMIN, SELLER, etc.
+
+    private List<ROLE> role  ;       // CUSTOMER, ADMIN, SELLER, etc.
 
     private String address;
 
