@@ -40,6 +40,7 @@ public class SecurityConfig {
                                 .requestMatchers("/api/cart/**","/api/cart").authenticated()
                                 .requestMatchers("/api/auth").authenticated()
                                 .requestMatchers("/api/order","/api/order/**").authenticated()
+                                .requestMatchers("/api/seller").authenticated()
                                 .anyRequest().authenticated()
                 );
                 http.addFilterBefore(authTokenFilter, UsernamePasswordAuthenticationFilter.class);
