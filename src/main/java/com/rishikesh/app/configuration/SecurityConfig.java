@@ -34,7 +34,7 @@ public class SecurityConfig {
               )
                 .authorizeHttpRequests(
                         req -> req
-                                .requestMatchers("/api/signing","/api/signup").permitAll()
+                                .requestMatchers("/api/signing","/api/signup","/api/verify-email","/api/verify-otp").permitAll()
                                 .requestMatchers("/api/products/auth","/api/products/auth/**").authenticated()
                                 .requestMatchers("/api/products/public/**").permitAll()
                                 .requestMatchers("/api/cart/**","/api/cart").authenticated()
