@@ -1,6 +1,7 @@
 package com.rishikesh.app.mapper;
 
 import com.rishikesh.app.dto.product.ProductDto;
+import com.rishikesh.app.dto.product.ProductResDto;
 import com.rishikesh.app.entity.ProductEntity;
 
 public class ProductMapper {
@@ -12,6 +13,17 @@ public class ProductMapper {
                 .description(entity.getDescription())
                 .price(entity.getPrice())
                 .stock(entity.getStock())
+                .build();
+    }
+
+    public static ProductResDto toResDto (ProductEntity entity){
+
+        return ProductResDto.builder()
+                .name(entity.getName())
+                .description(entity.getDescription())
+                .price(entity.getPrice())
+                .stock(entity.getStock())
+                .secureUrl(entity.getSecureUrl())
                 .build();
     }
 

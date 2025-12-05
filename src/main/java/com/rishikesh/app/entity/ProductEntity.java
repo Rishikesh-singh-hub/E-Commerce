@@ -14,10 +14,11 @@ import java.math.BigDecimal;
 public class ProductEntity {
     @Id
 
-    private String id;        // Mongo ObjectId as hex string
-
+    private String id;
+    private String secureUrl;
+    private String publicId;
     private String name;
     private String description;
     private BigDecimal price;
-    private Integer stock;   // nullable = unlimited if null
+    private Integer stock;
 }

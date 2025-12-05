@@ -1,15 +1,14 @@
 package com.rishikesh.app.controller;
 
-import com.rishikesh.app.dto.user.UserDto;
-import com.rishikesh.app.dto.user.UserLoginDto;
-import com.rishikesh.app.dto.user.UserRequest;
-import com.rishikesh.app.dto.user.UserResponse;
+import com.rishikesh.app.dto.user.*;
 import com.rishikesh.app.service.UserService;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.net.URI;
 
 @RestController
 @RequestMapping("/api")
@@ -39,7 +38,7 @@ public class UserController {
     public ResponseEntity<?> singup (@Valid @RequestBody UserDto userDto){
         UserResponse userResponse = userService.signupUser(userDto);
 
-        return ResponseEntity.ok(userResponse);
+        return ResponseEntity.created(URI.create("/")).build();
     }
 
     @PostMapping("/signing")
@@ -50,5 +49,28 @@ public class UserController {
                 return ResponseEntity.ok(loginDto);
         return ResponseEntity.noContent().build();
     }
+
+    @PostMapping("/verify-email")
+    public ResponseEntity<?> verify(@RequestBody EmailReqDto email){
+        boolean verification = userService.sendOtp(email);
+        if (verification){
+            return ResponseEntity.ok("Otp send");
+        }
+        return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/verify-otp")
+    public ResponseEntity<?> verifyOtp(@RequestBody EmailReqDto email){
+        boolean verified = userService.verifyOtp(email);
+        if (verified){
+            return ResponseEntity.ok("Id created");
+        }
+        return ResponseEntity.badRequest().build();
+
+
+    }
+
+
+
 
 }
