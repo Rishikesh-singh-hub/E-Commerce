@@ -6,17 +6,15 @@ import com.rishikesh.app.dto.product.ProductDto;
 import com.rishikesh.app.dto.product.ProductResDto;
 import com.rishikesh.app.entity.ProductEntity;
 import com.rishikesh.app.entity.SellerEntity;
-import com.rishikesh.app.entity.UserEntity;
 import com.rishikesh.app.mapper.ProductMapper;
 import com.rishikesh.app.repository.ProductRepo;
 import com.rishikesh.app.repository.SellerRepo;
-import com.rishikesh.app.repository.UserRepo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -56,6 +54,7 @@ public class ProductService {
 
     public void delete(String id) { productRepo.deleteById(id); }
 
+    @Transactional
     public ProductResDto createProduct(ProductDto dto, MultipartFile image, String userId) {
 
         logger.info("got product add request...");

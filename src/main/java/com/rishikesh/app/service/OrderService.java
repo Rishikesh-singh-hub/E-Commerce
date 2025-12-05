@@ -1,19 +1,17 @@
 package com.rishikesh.app.service;
 
 import com.rishikesh.app.dto.bill.BillResDto;
-import com.rishikesh.app.dto.order.OrderDto;
 import com.rishikesh.app.dto.order.OrderItemReqDto;
 import com.rishikesh.app.dto.order.OrderReqDto;
-import com.rishikesh.app.dto.order.OrderTotalResult;
 import com.rishikesh.app.entity.*;
 import com.rishikesh.app.mapper.BillMapper;
 import com.rishikesh.app.mapper.OrderMapper;
 import com.rishikesh.app.repository.BillRepo;
-import com.rishikesh.app.repository.IdempotencyRepo;
 import com.rishikesh.app.repository.OrderRepo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.Instant;
@@ -30,70 +28,21 @@ public class OrderService {
 
     private final BillRepo billRepo;
     private final IdempotencyService idempotencyService;
-    private final IdempotencyRepo idempotencyRepo;
     private final OrderRepo orderRepo;
     private final ProductService productService;
 
-    public OrderService(BillRepo billRepo, IdempotencyService idempotencyService, IdempotencyRepo idempotencyRepo, OrderRepo orderRepo, ProductService productService){
+    public OrderService(BillRepo billRepo, IdempotencyService idempotencyService, OrderRepo orderRepo, ProductService productService){
         this.billRepo = billRepo;
 
         this.idempotencyService = idempotencyService;
-        this.idempotencyRepo = idempotencyRepo;
         this.orderRepo = orderRepo;
         this.productService = productService;
     }
 
-//    public OrderDto createOrder(String userId, OrderReqDto orderReq) {
-//
-//        IdempotencyRecord record =idempotencyService.checkIdempoKey(userId, orderReq.getIdempotencyKey());
-//
-//        if (record!=null){
-//            logger.info("looking for previous order...");
-//            OrderEntity order =  orderRepo.findById(record.getOrderId()).orElse(null);
-//            logger.info("order found:  {}",order.getIdempotencyKey());
-//            return OrderMapper.toOrderDto(order);
-//        }
-//        List<OrderItemReqDto> orderItemsDtoList = orderReq.getItems();
-//
-//       List<ProductEntity> productEntities =orderReq.getItems().stream().map(
-//               productService::validateProduct
-//       ).toList();
-//
-//
-//
-//    OrderTotalResult totalResult = total(productEntities,orderItemsDtoList);
-//    List<OrderItem> orderItems = totalResult.getUpdatedProducts().stream()
-//            .map(OrderMapper::toOrderItem)
-//            .toList();
-//
-//    OrderEntity newOrder = OrderEntity.builder()
-//                .id(UUID.randomUUID().toString())
-//                .userId(userId)
-//                .idempotencyKey(orderReq.getIdempotencyKey())
-//            .items(orderItems)
-//            .total(totalResult.getTotal())
-//            .build();
-//
-//        IdempotencyRecord newRecord = IdempotencyRecord.builder()
-//                        .id(UUID.randomUUID().toString())
-//                        .userId(newOrder.getUserId())
-//                        .idempotencyKey(newOrder.getIdempotencyKey())
-//                        .orderId(newOrder.getId())
-//                        .status(newOrder.getStatus())
-//                        .createdAt(newOrder.getCreatedAt())
-//                        .updatedAt(newOrder.getUpdatedAt())
-//                        .build();
-//        idempotencyRepo.save(newRecord);
-//        orderRepo.save(newOrder);
-//
-//        return OrderMapper.toOrderDto(newOrder);
-//
-//    }
 
     private BigDecimal total(List<ProductEntity> productEntities,
                                    List<OrderItemReqDto> orderItemsDtoList) {
 
-        // Map: productId → ProductEntity
         Map<String, ProductEntity> entityMap = productEntities.stream()
                 .collect(Collectors.toMap(ProductEntity::getId, p -> p));
 
@@ -109,19 +58,9 @@ public class OrderService {
 
             int qty = item.getQuantity();
 
-            // compute line total
             BigDecimal line = orig.getPrice().multiply(BigDecimal.valueOf(qty));
             total = total.add(line);
 
-            // create a copy and set stock = qty
-//            ProductEntity copy = new ProductEntity();
-//            copy.setId(orig.getId());
-//            copy.setName(orig.getName());
-//            copy.setDescription(orig.getDescription());
-//            copy.setPrice(orig.getPrice());
-//            copy.setStock(qty);         // this is your "qty field"
-
-//            updatedProducts.add(copy);
         }
         return total;
     }
@@ -142,7 +81,6 @@ public class OrderService {
 
         logger.info("Validated Products from stocks ...");
 
-//        OrderTotalResult totalResult = total(productEntities,orderItemsDtoList);
 
         List<OrderItem> orderItems = productEntities.stream()
                 .map(OrderMapper::toOrderItem)
@@ -180,10 +118,10 @@ public class OrderService {
 
 
 return BillMapper.toDto(savedBill);
-//        return OrderMapper.toOrderDto(newOrder);
 
     }
 
+    @Transactional
     public BillResDto placeOrder(String key,String userId,String orderId) throws NullPointerException{
         try {
             logger.info("checking for idempoKey ....");
