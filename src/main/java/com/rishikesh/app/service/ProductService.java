@@ -3,28 +3,32 @@ package com.rishikesh.app.service;
 
 import com.rishikesh.app.dto.order.OrderItemReqDto;
 import com.rishikesh.app.dto.product.ProductDto;
+import com.rishikesh.app.dto.product.ProductResDto;
 import com.rishikesh.app.entity.ProductEntity;
 import com.rishikesh.app.entity.SellerEntity;
-import com.rishikesh.app.entity.UserEntity;
 import com.rishikesh.app.mapper.ProductMapper;
 import com.rishikesh.app.repository.ProductRepo;
 import com.rishikesh.app.repository.SellerRepo;
-import com.rishikesh.app.repository.UserRepo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class ProductService {
     Logger logger = LoggerFactory.getLogger(ProductService.class);
     private final ProductRepo productRepo;
     private final SellerRepo sellerRepo;
+    private final CloudinaryService cloudService;
 
-    public ProductService(ProductRepo productRepo, SellerRepo sellerRepo) {
+    public ProductService(ProductRepo productRepo, SellerRepo sellerRepo, CloudinaryService cloudService) {
         this.productRepo = productRepo;
         this.sellerRepo = sellerRepo;
+        this.cloudService = cloudService;
     }
 
     public ProductEntity create(ProductEntity p) { return productRepo.save(p); }
@@ -40,18 +44,31 @@ public class ProductService {
 
     public ProductEntity get(String id) { return productRepo.findById(id).orElseThrow(() -> new RuntimeException("ProductEntity not found")); }
 
-    public List<ProductEntity> list() { return productRepo.findAll(); }
+    public List<ProductResDto> list() {
+        List<ProductEntity> entity =  productRepo.findAll();
+         List<ProductResDto> resDtos = entity.stream().map(
+                 ProductMapper::toResDto
+         ).toList();
+         return resDtos;
+    }
 
     public void delete(String id) { productRepo.deleteById(id); }
 
-    public String createProduct(ProductDto dto,String userId) {
+    @Transactional
+    public ProductResDto createProduct(ProductDto dto, MultipartFile image, String userId) {
 
+        logger.info("got product add request...");
+
+        Map imageDetail = cloudService.uploadImage(image,"Product");
         ProductEntity entity= ProductMapper.toEntity(dto);
+        entity.setPublicId(imageDetail.get("public_id").toString());
+        entity.setSecureUrl(imageDetail.get("secure_url").toString());
         productRepo.save(entity);
         SellerEntity sellerEntity = sellerRepo.findByUserId(userId);
+        logger.info("product ids : {}",sellerEntity.getProductIds());
         sellerEntity.getProductIds().add(entity.getId());
         sellerRepo.save(sellerEntity);
-        return entity.getId();
+        return ProductMapper.toResDto(entity);
 
     }
 
