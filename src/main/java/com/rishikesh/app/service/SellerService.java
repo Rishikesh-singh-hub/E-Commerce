@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 import java.util.UUID;
+import org.springframework.data.mongodb.core.geo.GeoJsonPoint;
 
 @Service
 public class SellerService {
@@ -26,16 +27,22 @@ public class SellerService {
 
     public SellerResDto signin(@Valid SellerReqDto sellerReq,String userId) {
 
-        SellerEntity seller = SellerEntity.builder()
-                .id(UUID.randomUUID().toString())
-                .userId(userId)
-                .shopName(sellerReq.getShopName())
-                .shopAddress(sellerReq.getShopAddress())
-                .phoneNumber(sellerReq.getPhoneNumber())
-                .active(true)
-                .createdAt(Instant.now())
-                .build();
+        SellerEntity.SellerEntityBuilder sellerBuilder = SellerEntity.builder()
+            .id(UUID.randomUUID().toString())
+            .userId(userId)
+            .shopName(sellerReq.getShopName())
+            .shopAddress(sellerReq.getShopAddress())
+            .phoneNumber(sellerReq.getPhoneNumber())
+            .active(true)
+            .createdAt(Instant.now());
 
+        // set location if provided (GeoJsonPoint expects lon, lat)
+        if (sellerReq.getLatitude() != null && sellerReq.getLongitude() != null) {
+            GeoJsonPoint p = new GeoJsonPoint(sellerReq.getLongitude(), sellerReq.getLatitude());
+            sellerBuilder.location(p);
+        }
+
+        SellerEntity seller = sellerBuilder.build();
         sellerRepo.save(seller);
         UserEntity user = userRepo.findById(userId).orElse(null);
         user.getRole().add(ROLE.SELLER);
@@ -45,10 +52,17 @@ public class SellerService {
 
     private SellerResDto toResDto(SellerEntity entity){
 
-        return SellerResDto.builder()
+        SellerResDto.SellerResDtoBuilder builder = SellerResDto.builder()
                 .name(entity.getShopName())
                 .address(entity.getShopAddress())
-                .number(entity.getPhoneNumber())
-                .build();
+                .number(entity.getPhoneNumber());
+
+        if (entity.getLocation() != null) {
+            // GeoJsonPoint stores X=lon, Y=lat
+            builder.latitude(entity.getLocation().getY());
+            builder.longitude(entity.getLocation().getX());
+        }
+
+        return builder.build();
     }
 }
