@@ -12,5 +12,7 @@ public class SellerResDto {
     private String number;
     private String name;
     private String address;
+    private Double latitude;
+    private Double longitude;
 
 }

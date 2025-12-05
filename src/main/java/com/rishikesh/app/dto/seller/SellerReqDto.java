@@ -33,5 +33,9 @@ public class SellerReqDto {
             message = "Phone number must be exactly 10 digits"
     )
     private String phoneNumber;
+        // Optional location fields (latitude, longitude) for the shop
+        // Use decimal degrees: latitude in [-90,90], longitude in [-180,180]
+        private Double latitude;
+        private Double longitude;
 
 }
