@@ -2,39 +2,30 @@ package com.rishikesh.user.jwt;
 
 import com.rishikesh.user.configuration.UserDetailsConfig;
 import com.rishikesh.user.entity.UserEntity;
-import com.rishikesh.user.repository.UserRepo;
 import io.jsonwebtoken.*;
-import io.jsonwebtoken.io.Decoders;
-import io.jsonwebtoken.security.Keys;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
-
-import javax.crypto.SecretKey;
-import java.security.Key;
 import java.util.Date;
-import java.util.Optional;
 
 @Component
 public class JwtUtils {
 
     Logger logger = LoggerFactory.getLogger(JwtUtils.class);
-    @Value("${spring.app.jwtSecret}")
-    private String jwtKey;
-    private final UserRepo userRepo;
+    private final RsaKeyProvider rsaKeyProvider;
     private final UserDetailsService userDetailsService;
 
-    public JwtUtils(UserRepo userRepo, UserDetailsService userDetailsService) {
-        this.userRepo = userRepo;
+    public JwtUtils(RsaKeyProvider rsaKeyProvider,
+                    UserDetailsService userDetailsService) {
+        this.rsaKeyProvider = rsaKeyProvider;
         this.userDetailsService = userDetailsService;
     }
 
     public Claims parseClaims(String token) {
         return Jwts.parser()
-                .verifyWith((SecretKey) key())
+                .verifyWith(rsaKeyProvider.publicKey())
                 .build()
                 .parseSignedClaims(token)
                 .getPayload();
@@ -44,26 +35,10 @@ public class JwtUtils {
             throws MalformedJwtException, ExpiredJwtException, UnsupportedJwtException, IllegalArgumentException {
 
         Jwts.parser()
-                .verifyWith((SecretKey) key())
+                .verifyWith(rsaKeyProvider.publicKey())
                 .build()
                 .parseSignedClaims(jwt);
         return true;
-
-    }
-
-    private Key key() {
-        return Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtKey));
-    }
-
-    public Optional<UserEntity> getIdFromJwt(String jwt){
-
-        Claims claim = Jwts.parser()
-                .verifyWith((SecretKey) key())
-                .build()
-                .parseSignedClaims(jwt)
-                .getPayload();
-        logger.info("id found : {}",claim.getSubject());
-        return userRepo.findById(claim.getSubject());
 
     }
 
@@ -75,7 +50,7 @@ public class JwtUtils {
                 .claim("roles",entity.getRole())
                 .issuedAt(date)
                 .expiration(new Date(System.currentTimeMillis()+2000*60*60))
-                .signWith((SecretKey) key())
+                .signWith(rsaKeyProvider.privateKey(),Jwts.SIG.RS256)
                 .compact();
 
     }
@@ -106,10 +81,6 @@ public class JwtUtils {
         }
 
         // 8) User account state
-        if (!user.isActive()) {
-            return false;
-        }
-
-        return true;
+        return user.isActive();
     }
 }

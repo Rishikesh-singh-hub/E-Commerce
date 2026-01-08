@@ -45,8 +45,11 @@ Thumbs.db
 *.env
 application-*.yml
 application-*.properties
-UserMicroservice/src/main/resources/application.properties
 !application.yml  # keep your base config if it’s safe
+cart/src/main/resources/application.yaml
+product/src/main/resources/application.yaml
+user/src/main/resources/application.yaml
+
 
 # === Docker ===
 /docker-data/
