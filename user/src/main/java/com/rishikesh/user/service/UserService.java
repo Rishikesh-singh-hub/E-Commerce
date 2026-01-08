@@ -1,6 +1,6 @@
 package com.rishikesh.user.service;
 
-import com.rishikesh.user.dto.user.*;
+import com.rishikesh.user.dto.*;
 import com.rishikesh.user.entity.UserEntity;
 import com.rishikesh.user.jwt.JwtUtils;
 import com.rishikesh.user.repository.UserRepo;
@@ -67,7 +67,6 @@ public class UserService {
 
 
     }
-
     public boolean sendOtp(EmailReqDto email) {
 
         UserEntity entity =  userRepo.findByEmail(email.getEmail()).orElse(null);

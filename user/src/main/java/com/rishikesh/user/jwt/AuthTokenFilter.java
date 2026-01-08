@@ -2,11 +2,11 @@ package com.rishikesh.user.jwt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import com.rishikesh.contracts.exception.ErrorResponse;
+import com.rishikesh.contracts.exception.InvalidTokenException;
+import com.rishikesh.contracts.exception.JwtTokenExpiredException;
 import com.rishikesh.user.configuration.UserDetailsConfig;
-import com.rishikesh.user.exception.ErrorResponse;
 import com.rishikesh.user.entity.UserEntity;
-import com.rishikesh.user.exception.InvalidTokenException;
-import com.rishikesh.user.exception.JwtTokenExpiredException;
 import com.rishikesh.user.repository.UserRepo;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;

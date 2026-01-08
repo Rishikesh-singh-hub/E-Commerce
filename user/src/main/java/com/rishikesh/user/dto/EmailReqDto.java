@@ -1,4 +1,4 @@
-package com.rishikesh.user.dto.user;
+package com.rishikesh.user.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;

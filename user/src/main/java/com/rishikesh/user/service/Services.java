@@ -1,9 +1,10 @@
 package com.rishikesh.user.service;
 
-import com.rishikesh.user.dto.user.EmailReqDto;
+import com.rishikesh.user.dto.EmailReqDto;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.util.concurrent.TimeUnit;
@@ -29,7 +30,7 @@ public class Services {
 
     }
 
-
+    @Async
     public void storeOtp(String email, String otp) {
         redis.opsForValue().set("otp:" + email, otp, 600, TimeUnit.SECONDS);
         redis.opsForValue().set("otp:attempts:" + email, "3", 600, TimeUnit.SECONDS);

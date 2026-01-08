@@ -1,4 +1,4 @@
-package com.rishikesh.user.dto.user;
+package com.rishikesh.user.dto;
 
 import lombok.*;
 

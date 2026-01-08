@@ -1,4 +1,4 @@
-package com.rishikesh.app.entity;
+package com.rishikesh.user.entity;
 
 public enum ROLE {
     CUSTOMER,
