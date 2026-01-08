@@ -1,4 +1,4 @@
-package com.rishikesh.contracts.exception;
+package com.rishikesh.cart.exception;
 
 import lombok.*;
 

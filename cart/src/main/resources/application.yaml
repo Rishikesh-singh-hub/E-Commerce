@@ -1,0 +1,9 @@
+spring:
+  application:
+    name: CartApplication
+
+services:
+  product:
+    base-url: http://localhost:8082/api/products
+  user:
+    base-url: http://localhost:8081/user/internal

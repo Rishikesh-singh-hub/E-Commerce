@@ -1,0 +1,20 @@
+spring:
+  application:
+    name: ProductsApplication
+  data:
+    mongodb:
+      host: localhost
+      port: 27017
+      database: eCommerceDb
+      auto-index-creation: true
+
+  app:
+    jwtSecret: mySecretKey123912738aopsgjnspkmndfsopkvajoirjg94gf2opfng2moknm
+
+cloudinary:
+  cloud-name: djyxqqdkn
+  api-key: 789375946553372
+  api-secret: jmdQx3CccrlrfF-LwBLKBzvNvYc
+
+server:
+  port: 8082

@@ -11,7 +11,7 @@
 	<groupId>com.rishikesh</groupId>
 	<artifactId>eCommerce</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-    <packaging>jar</packaging>
+    <packaging>pom</packaging>
     <name>E-Commerce</name>
 	<description>Demo project for Spring Boot</description>
 	<url/>
@@ -23,6 +23,11 @@
 	</developers>
     <modules>
 
+        <module>user</module>
+        <module>product</module>
+        <module>cart</module>
+        <module>order</module>
+        <module>contracts</module>
     </modules>
     <scm>
 		<connection/>
@@ -52,15 +57,7 @@
 			<artifactId>lombok</artifactId>
 			<optional>true</optional>
 		</dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-security</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-test</artifactId>
-            <scope>test</scope>
-        </dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-mail</artifactId>
