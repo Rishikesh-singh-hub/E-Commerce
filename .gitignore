@@ -48,7 +48,12 @@ application-*.properties
 !application.yml  # keep your base config if it’s safe
 cart/src/main/resources/application.yaml
 product/src/main/resources/application.yaml
+src/main/resources/keys/private.pem
+src/main/resources/keys/private_pkcs8.pem
+src/main/resources/keys/public.pem
+# user files
 user/src/main/resources/application.yaml
+user/keys
 
 
 # === Docker ===
