@@ -1,5 +1,6 @@
 package com.rishikesh.user.service;
 
+import com.nimbusds.jose.JOSEException;
 import com.rishikesh.user.dto.*;
 import com.rishikesh.user.entity.UserEntity;
 import com.rishikesh.user.jwt.JwtUtils;
@@ -45,7 +46,12 @@ public class UserService {
                         .authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(),request.getPassword()));
                 SecurityContextHolder.getContext().setAuthentication(auth);
                 UserEntity entity = userRepo.findByEmail(request.getEmail()).orElseThrow();
-                String jwt = jwtUtils.generateJwt(entity);
+                String jwt = null;
+                try {
+                    jwt = jwtUtils.generateJwt(entity);
+                } catch (JOSEException e) {
+                    throw new RuntimeException(e);
+                }
                 return UserLoginDto.builder()
                         .name(entity.getName())
                         .email(entity.getEmail())
