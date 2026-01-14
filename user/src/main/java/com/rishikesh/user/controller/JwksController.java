@@ -5,9 +5,9 @@ import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
 import com.rishikesh.user.jwks.KeyRegistry;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -23,16 +23,16 @@ public class JwksController {
 
     @GetMapping("/auth/.well-known/jwks.json")
     public Map<String, Object> jwks() {
-        List<RSAKey> publicKeys = keyRegistry.all().
-                entrySet().
-                stream().
-                map(entry ->
-                        new RSAKey.Builder(entry.getValue()).
-                                keyID(entry.getKey()).
-                                build()
-                ).toList();
+        List<JWK> keys = new ArrayList<>();
+        keyRegistry.all().forEach((kid,publicKey)->{
+            RSAKey key = new RSAKey.Builder(publicKey)
+                    .keyID(kid)
+                    .build();
+            keys.add(key);
+        });
 
-        return new JWKSet((JWK) publicKeys).toJSONObject();
+
+        return new JWKSet(keys).toJSONObject();
 
     }
 }

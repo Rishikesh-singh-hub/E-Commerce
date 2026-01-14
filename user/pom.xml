@@ -66,7 +66,7 @@
         </dependency>
 
         <!-- ========================= -->
-        <!-- JWT (Token generation - User Service responsibility) -->
+        <!-- DummyJwt (Token generation - User Service responsibility) -->
         <!-- ========================= -->
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
@@ -106,7 +106,7 @@
             <optional>true</optional>
         </dependency>
 
-        <!--        nimbus jwt auth -->
+        <!--        nimbus jwks auth -->
         <dependency>
             <groupId>com.nimbusds</groupId>
             <artifactId>nimbus-jose-jwt</artifactId>
