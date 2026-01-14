@@ -45,13 +45,13 @@ public class AuthTokenFilter extends OncePerRequestFilter {
             String jwt = request.getHeader("Authorization");
             if(jwt!=null && jwt.startsWith("Bearer ")) {
                 jwt = jwt.substring(7).trim();
-                logger.info("jwt found {}", jwt);
+                logger.info("jwks found {}", jwt);
             }
 
             if (jwt!= null && jwtUtils.validateJwt(jwt)) {
-                logger.info("jwt validated");
+                logger.info("jwks validated");
                 List<String> roles = jwtUtils.getRolesFromJwt(jwt);
-                logger.info("got user roles from jwt {}",roles);
+                logger.info("got user roles from jwks {}",roles);
 
                 List<SimpleGrantedAuthority> authorities = roles.stream()
                         .map(

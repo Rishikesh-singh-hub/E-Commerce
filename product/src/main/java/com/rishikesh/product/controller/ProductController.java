@@ -86,7 +86,7 @@ public class ProductController {
         if (userId == null || userId.isBlank()) {
             throw new IllegalArgumentException("missing subject");
         }
-        logger.info("return user id from jwt : {}",userId);
+        logger.info("return user id from jwks : {}",userId);
         return userId;
     }
 }
