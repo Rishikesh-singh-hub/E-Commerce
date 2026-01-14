@@ -11,6 +11,8 @@ import java.security.interfaces.RSAPublicKey;
 import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 @Component
 public class KeyRegistry {
@@ -38,7 +40,11 @@ public class KeyRegistry {
         return keys.get(kid);
     }
 
-    public Collection<RSAKeyPair> all() {
-        return keys.values();
+    public Map<String,RSAPublicKey> all() {
+        return keys.values().stream().collect(
+                Collectors.toUnmodifiableMap(
+                        RSAKeyPair::getKid,
+                        RSAKeyPair::getPublicKey
+        ));
     }
 }

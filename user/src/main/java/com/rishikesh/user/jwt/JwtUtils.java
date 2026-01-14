@@ -2,7 +2,6 @@ package com.rishikesh.user.jwt;
 
 import com.nimbusds.jose.*;
 import com.nimbusds.jose.crypto.RSASSASigner;
-import com.nimbusds.jose.crypto.RSASSAVerifier;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
 import com.rishikesh.user.entity.UserEntity;
@@ -11,7 +10,10 @@ import com.rishikesh.user.jwks.RSAKeyPair;
 import io.jsonwebtoken.*;
 import org.springframework.stereotype.Component;
 
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.Date;
+import java.util.List;
 
 @Component
 public class JwtUtils {
@@ -35,18 +37,16 @@ public class JwtUtils {
 
     private JWTClaimsSet getClaims(UserEntity entity) {
 
+            Instant now = Instant.now();
 
-
-        Date date = new Date();
-
-        return new JWTClaimsSet.Builder()
-                .subject(entity.getId())
-                .issuer("user-service")
-                .issueTime(date)
-                .expirationTime(new Date(System.currentTimeMillis()+2000*60*60))
-                .claim("roles",entity.getRole())
-                .build();
-
+            return new JWTClaimsSet.Builder()
+                    .subject(entity.getId())
+                    .issuer("user-service")
+                    .audience("api-gateway")
+                    .issueTime(Date.from(now))
+                    .expirationTime(Date.from(now.plus(2, ChronoUnit.HOURS)))
+                    .claim("roles", List.of(entity.getRole()))
+                    .build();
 
     }
 
@@ -66,35 +66,5 @@ public class JwtUtils {
         return jwt.serialize();
 
     }
-
-    public JWTClaimsSet verifyAndParse(String token) throws Exception {
-
-        SignedJWT jwt = SignedJWT.parse(token);
-
-        String kid = jwt.getHeader().getKeyID();
-        if (kid == null) {
-            throw new SecurityException("Missing kid");
-        }
-
-        RSAKeyPair key = keyRegistry.getByKid(kid);
-        if (key == null) {
-            throw new SecurityException("Unknown kid");
-        }
-
-        JWSVerifier verifier = new RSASSAVerifier(key.getPublicKey());
-
-        if (!jwt.verify(verifier)) {
-            throw new SecurityException("Invalid signature");
-        }
-
-        Date expiry = jwt.getJWTClaimsSet().getExpirationTime();
-        if (expiry.before(new Date())) {
-            throw new SecurityException("Token expired");
-        }
-
-        return jwt.getJWTClaimsSet();
-    }
-
-
 
 }
