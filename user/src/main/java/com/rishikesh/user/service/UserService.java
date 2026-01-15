@@ -1,6 +1,7 @@
 package com.rishikesh.user.service;
 
 import com.nimbusds.jose.JOSEException;
+import com.rishikesh.contracts.exception.EmailAlreadyExistException;
 import com.rishikesh.user.dto.*;
 import com.rishikesh.user.entity.UserEntity;
 import com.rishikesh.user.jwt.JwtUtils;
@@ -67,6 +68,9 @@ public class UserService {
     public UserResponse signupUser(@Valid UserDto userDto) {
 
         UserEntity entity = userMapper.toUserEntity(userDto);
+        if(userRepo.existsByEmail(entity.getEmail())){
+            throw new EmailAlreadyExistException("Email Already exist");
+        }
         entity.setActive(false);
         userRepo.save(entity);
         return  userMapper.toUserResponse(entity);
