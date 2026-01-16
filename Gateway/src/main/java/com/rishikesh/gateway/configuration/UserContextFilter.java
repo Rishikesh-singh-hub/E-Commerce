@@ -42,10 +42,6 @@ public class UserContextFilter implements GlobalFilter {
                     ServerHttpRequest mutatedRequest =
                             exchange.getRequest().mutate()
                                     .header("X-Gateway-Request","true")
-                                    .header("X-User-Id", jwt.getSubject())
-                                    .header("X-Roles",
-                                            String.join(",", jwt.getClaimAsStringList("roles"))
-                                    )
                                     .build();
 
                     return chain.filter(
