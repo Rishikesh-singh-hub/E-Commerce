@@ -44,6 +44,8 @@ public class UserController {
     @PostMapping("/signing")
     public ResponseEntity<?> signing(@Valid @RequestBody UserRequest request){
 
+        logger.info("got signin request");
+
         UserLoginDto loginDto = userService.userLogin(request);
         if (loginDto!=null)
                 return ResponseEntity.ok(loginDto);

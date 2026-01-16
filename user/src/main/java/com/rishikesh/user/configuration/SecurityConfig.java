@@ -27,9 +27,17 @@ public class SecurityConfig {
                         s.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
                 .authorizeHttpRequests(auth -> auth
-                        .anyRequest().permitAll()
+                        .requestMatchers("/api/user/signing",
+                                "/auth/.well-known/jwks.json",
+                                "/api/user/signup").permitAll()
+                        .anyRequest().authenticated()
+                )
+                .oauth2ResourceServer(
+                        oauth2 -> oauth2
+                                .jwt(jwt ->
+                                        jwt.jwkSetUri("http://localhost:8080/auth/.well-known/jwks.json")
+                                )
                 );
         return http.build();
     }
-
 }

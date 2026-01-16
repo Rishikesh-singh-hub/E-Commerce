@@ -43,6 +43,7 @@ public class UserService {
 
             UserEntity checkEntity = userRepo.findByEmail(request.getEmail()).orElse(null);
             if (  checkEntity != null && checkEntity.isActive()){
+                logger.info("user found");
                 Authentication auth = authManager
                         .authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(),request.getPassword()));
                 SecurityContextHolder.getContext().setAuthentication(auth);
@@ -60,7 +61,7 @@ public class UserService {
                         .jwt(jwt)
                         .build();
             }
-
+            logger.info("user not found");
             return null;
 
     }
