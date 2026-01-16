@@ -1,6 +1,5 @@
 package com.rishikesh.product.configuration;
 
-import com.rishikesh.product.jwt.AuthTokenFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
@@ -18,11 +17,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
 
     Logger logger = LoggerFactory.getLogger(SecurityConfig.class);
-    private final AuthTokenFilter authTokenFilter;
 
-    public SecurityConfig(AuthTokenFilter authTokenFilter) {
-        this.authTokenFilter = authTokenFilter;
-    }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -34,16 +29,13 @@ public class SecurityConfig {
                 )
                 .authorizeHttpRequests(
                         req -> req
-                                .requestMatchers("/api/signing","/api/signup","/api/verify-email","/api/verify-otp","/api/products/check").permitAll()
                                 .requestMatchers("/api/products/auth","/api/products/auth/**").authenticated()
                                 .requestMatchers("/api/products/public/**").permitAll()
-                                .requestMatchers("/api/cart/**","/api/cart").authenticated()
-                                .requestMatchers("/api/auth").authenticated()
-                                .requestMatchers("/api/order","/api/order/**").authenticated()
-                                .requestMatchers("/api/seller").authenticated()
-                                .anyRequest().authenticated()
-                );
-        http.addFilterBefore(authTokenFilter, UsernamePasswordAuthenticationFilter.class);
+                                .anyRequest().denyAll()
+                ).oauth2ResourceServer(oauth -> oauth.jwt(
+                        jwt -> jwt
+                                .jwkSetUri("http://localhost:8080/auth/.well-known/jwks.json")
+                ));
 
         return http.build();
     }
