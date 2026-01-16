@@ -17,21 +17,26 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 @Service
 public class ProductService {
     Logger logger = LoggerFactory.getLogger(ProductService.class);
     private final ProductRepo productRepo;
-    private final SellerRepo sellerRepo;
     private final com.rishikesh.product.service.CloudinaryService cloudService;
 
-    public ProductService(ProductRepo productRepo, SellerRepo sellerRepo, com.rishikesh.product.service.CloudinaryService cloudService) {
+    public ProductService(ProductRepo productRepo,
+                          com.rishikesh.product.service.CloudinaryService cloudService) {
         this.productRepo = productRepo;
-        this.sellerRepo = sellerRepo;
         this.cloudService = cloudService;
     }
 
-    public ProductEntity create(ProductEntity p) { return productRepo.save(p); }
+    public ProductEntity create(ProductEntity p) {
+        ProductEntity product = new ProductEntity();
+        product.setId(UUID.randomUUID().toString());
+
+        return productRepo.save(p);
+    }
 
     public ProductEntity update(String id, ProductDto dto) {
         ProductEntity p = productRepo.findById(id).orElseThrow(() -> new RuntimeException("ProductEntity not found"));
@@ -61,13 +66,10 @@ public class ProductService {
 
         Map<String, Object> imageDetail = cloudService.uploadImage(image,"Product");
         ProductEntity entity= ProductMapper.toEntity(dto);
+        entity.setSellerId(userId);
         entity.setPublicId(imageDetail.get("public_id").toString());
         entity.setSecureUrl(imageDetail.get("secure_url").toString());
         productRepo.save(entity);
-        SellerEntity sellerEntity = sellerRepo.findByUserId(userId);
-        logger.info("product ids : {}",sellerEntity.getProductIds());
-        sellerEntity.getProductIds().add(entity.getId());
-        sellerRepo.save(sellerEntity);
         return ProductMapper.toResDto(entity);
 
     }

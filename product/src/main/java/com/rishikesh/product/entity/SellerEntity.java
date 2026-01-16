@@ -1,13 +1,12 @@
 package com.rishikesh.product.entity;
 
+import com.rishikesh.product.service.SellerService;
 import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.List;
 
 @Getter
 @Setter
@@ -26,9 +25,7 @@ public class SellerEntity {
     private String gstNumber;
     @Indexed(unique = true)
     private String phoneNumber;
-    @Builder.Default
-    private List<String> productIds = new ArrayList<>();
-    private boolean active;
+    private SellerStatus sellerStatus;
     private Instant createdAt;
 
 }

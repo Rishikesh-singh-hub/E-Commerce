@@ -13,8 +13,8 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 public class ProductEntity {
     @Id
-
     private String id;
+    private String sellerId;
     private String secureUrl;
     private String publicId;
     private String name;
