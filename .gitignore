@@ -56,6 +56,8 @@ user/src/main/java/com/rishikesh/user/test
 Gateway/src/main/resources/application.yaml
 #product
 product/src/main/resources/application.yaml
+product/src/main/resources
+
 
 
 # === Docker ===
