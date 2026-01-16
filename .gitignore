@@ -51,9 +51,11 @@ src/main/resources/keys/private_pkcs8.pem
 src/main/resources/keys/public.pem
 # user files
 user/src/main/resources/application.yaml
-user/keys/
+user/src/main/java/com/rishikesh/user/test
 #Gateway
 Gateway/src/main/resources/application.yaml
+#product
+product/src/main/resources/application.yaml
 
 
 # === Docker ===
