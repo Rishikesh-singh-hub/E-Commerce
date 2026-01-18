@@ -28,14 +28,23 @@ public class SecurityConfig {
         return http
                 .csrf(ServerHttpSecurity.CsrfSpec::disable)
                 .authorizeExchange(exchange -> exchange
-                        .pathMatchers("/api/user/signing",
-                                "/auth/.well-known/jwks.json",
-                                "/api/user/signup",
+                        //user-----------
+                        .pathMatchers(
                                 "/api/user/verify-email",
-                                "/api/user/verify-otp")
+                                "/api/user/verify-otp"
+                                ,"/api/user/signing",
+                                "/auth/.well-known/jwks.json",
+                                "/api/user/signup"
+                                )
                                 .permitAll()
+
+                        // product api's ----------------------
+                                .pathMatchers("/api/products/auth","/api/products/auth/**").authenticated()
+                                .pathMatchers("/api/products/public/**").permitAll()
+
+
                                 .anyExchange()
-                                .authenticated()
+                                .denyAll()
                         ).oauth2ResourceServer(oauth -> oauth
                         .jwt(jwtSpec -> jwtSpec.jwtDecoder(jwtDecoder()) )
                 ).build();

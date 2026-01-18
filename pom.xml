@@ -25,11 +25,10 @@
 
         <module>user</module>
 		<module>Gateway</module>
-
-		<!--        <module>product</module>-->
+		<module>product</module>
 <!--        <module>cart</module>-->
 <!--        <module>order</module>-->
-<!--        <module>contracts</module>-->
+        <module>contracts</module>
     </modules>
     <scm>
 		<connection/>

@@ -1,0 +1,9 @@
+user/target/
+.git/
+.idea/
+.vscode/
+node_modules/
+
+.gitignore
+docker-compose.yml
+Dockerfile
