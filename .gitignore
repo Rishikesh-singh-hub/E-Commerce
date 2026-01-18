@@ -57,6 +57,9 @@ Gateway/src/main/resources/application.yaml
 #product
 product/src/main/resources/application.yaml
 product/src/main/resources
+#docker
+Dockerfile
+docker-compose.yml
 
 
 
