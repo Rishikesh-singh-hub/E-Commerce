@@ -1,8 +1,11 @@
 package com.rishikesh.user.service;
 
+import com.rishikesh.contracts.ROLE;
 import com.rishikesh.user.entity.UserEntity;
 import com.rishikesh.user.repository.UserRepo;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class InternalService {
@@ -13,8 +16,17 @@ public class InternalService {
         this.userRepo = userRepo;
     }
 
-    public UserEntity getById(String userId){
-        return userRepo.findById(userId).orElse(null);
-    }
+    public void updateRole(String userId) {
 
+        UserEntity entity = userRepo.findById(userId).orElse(null);
+        if (entity != null) {
+            List<ROLE> roles = entity.getRole();
+            roles.add(ROLE.SELLER);
+            entity.setRole(roles);
+            userRepo.save(entity);
+        }
+
+
+
+    }
 }

@@ -81,6 +81,7 @@ public class UserService {
     public boolean sendOtp(EmailReqDto email) {
 
         UserEntity entity =  userRepo.findByEmail(email.getEmail()).orElse(null);
+        logger.info("entity found: ",entity.getName());
         if(entity.isActive()){
             return false;
         }

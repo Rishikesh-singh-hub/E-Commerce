@@ -1,5 +1,6 @@
 package com.rishikesh.user.entity;
 
+import com.rishikesh.contracts.ROLE;
 import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;

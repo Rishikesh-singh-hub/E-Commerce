@@ -54,6 +54,7 @@ public class UserController {
 
     @PostMapping("/verify-email")
     public ResponseEntity<?> verify(@RequestBody EmailReqDto email){
+        logger.info("verify req received");
         boolean verification = userService.sendOtp(email);
         if (verification){
             return ResponseEntity.ok("Otp send");

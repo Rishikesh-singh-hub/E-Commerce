@@ -28,8 +28,11 @@ public class SecurityConfig {
                 )
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/user/signing",
+                                "/api/user/verify-email",
+                                "/api/user/verify-otp",
                                 "/auth/.well-known/jwks.json",
                                 "/api/user/signup").permitAll()
+                        .requestMatchers("/internal/user/update-role").permitAll()
                         .anyRequest().authenticated()
                 )
                 .oauth2ResourceServer(

@@ -1,6 +1,9 @@
 package com.rishikesh.user.service;
 
 import com.rishikesh.user.dto.EmailReqDto;
+
+
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -16,7 +19,9 @@ public class Services {
     private final JavaMailSender javaMailSender;
     private final StringRedisTemplate redis;
 
-    public Services(JavaMailSender javaMailSender, StringRedisTemplate redis) {
+    public Services(JavaMailSender javaMailSender,
+                    StringRedisTemplate redis
+                    ) {
         this.javaMailSender = javaMailSender;
         this.redis = redis;
     }
