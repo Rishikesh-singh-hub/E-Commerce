@@ -32,7 +32,7 @@ public class SecurityConfig {
                                 "/api/user/verify-otp",
                                 "/auth/.well-known/jwks.json",
                                 "/api/user/signup").permitAll()
-                        .requestMatchers("/internal/user/update-role").permitAll()
+                        .requestMatchers("/internal/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .oauth2ResourceServer(
