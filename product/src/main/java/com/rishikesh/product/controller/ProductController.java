@@ -4,6 +4,7 @@ import com.rishikesh.product.dto.product.ProductDto;
 import com.rishikesh.product.dto.product.ProductResDto;
 import com.rishikesh.product.entity.ProductEntity;
 import com.rishikesh.product.service.ProductService;
+import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -25,11 +26,11 @@ public class ProductController {
     public ProductController(ProductService svc) {
         this.svc = svc;
     }
-    
+
 
     @PreAuthorize("hasAnyRole('Seller')")
     @PostMapping("/auth/add-product")
-    public ResponseEntity<ProductResDto> create(@RequestPart("data") ProductDto dto,
+    public ResponseEntity<ProductResDto> create(@RequestPart("data") @Valid ProductDto dto,
                                                 @RequestPart("image") MultipartFile image,
                                                 @AuthenticationPrincipal Jwt jwt) {
 

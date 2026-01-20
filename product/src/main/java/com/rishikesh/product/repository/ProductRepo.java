@@ -10,4 +10,5 @@ import java.util.Optional;
 public interface ProductRepo extends MongoRepository<ProductEntity, String> {
     Optional<ProductEntity> findByIdAndStockGreaterThanEqual(String id, int qty);
     List<ProductEntity> findAllByNameContainingIgnoreCase(String name);
+    List<ProductEntity> findAllBySellerId(String id);
 }
