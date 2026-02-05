@@ -3,7 +3,6 @@ package com.rishikesh.user.service;
 import com.rishikesh.user.dto.EmailReqDto;
 
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;

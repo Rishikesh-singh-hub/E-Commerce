@@ -1,9 +1,7 @@
-package com.rishikesh.product.dto.seller;
+package com.rishikesh.contracts.dto.seller;
 
-import com.rishikesh.product.entity.SellerStatus;
 import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.time.Instant;
 

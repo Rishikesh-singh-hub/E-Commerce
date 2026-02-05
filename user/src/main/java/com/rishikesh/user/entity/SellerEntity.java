@@ -1,6 +1,6 @@
-package com.rishikesh.product.entity;
+package com.rishikesh.user.entity;
 
-import com.rishikesh.product.service.SellerService;
+import com.rishikesh.contracts.dto.seller.SellerStatus;
 import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
@@ -18,8 +18,6 @@ public class SellerEntity {
 
     @Id
     private String id;
-    @Indexed(unique = true)
-    private String userId;
     private String shopName;
     private String shopAddress;
     private String gstNumber;

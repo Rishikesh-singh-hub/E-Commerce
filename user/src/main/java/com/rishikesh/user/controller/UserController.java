@@ -1,11 +1,15 @@
 package com.rishikesh.user.controller;
 
+import com.rishikesh.contracts.dto.seller.SellerReqDto;
+import com.rishikesh.contracts.dto.seller.SellerResDto;
 import com.rishikesh.user.dto.*;
 import com.rishikesh.user.service.UserService;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -28,6 +32,17 @@ public class UserController {
         return "ok";
     }
 
+    @PostMapping("/auth/seller-signin")
+    public ResponseEntity<?> addSeller(@AuthenticationPrincipal Jwt jwt, @Valid @RequestBody SellerReqDto sellerReq){
+
+        SellerResDto resDto = userService.addSeller(jwt.getSubject(),sellerReq);
+        if(resDto == null){
+            ResponseEntity.badRequest().body("user already exist");
+        }
+
+        return ResponseEntity.ok(resDto);
+
+    }
 
     @GetMapping
     public ResponseEntity<?> healthCheck(){
@@ -70,9 +85,5 @@ public class UserController {
         }
         return ResponseEntity.badRequest().build();
 
-
     }
-
-
-
 }

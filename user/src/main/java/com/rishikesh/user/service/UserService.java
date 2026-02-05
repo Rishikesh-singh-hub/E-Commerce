@@ -1,10 +1,15 @@
 package com.rishikesh.user.service;
 
 import com.nimbusds.jose.JOSEException;
+import com.rishikesh.contracts.ROLE;
+import com.rishikesh.contracts.dto.seller.SellerReqDto;
+import com.rishikesh.contracts.dto.seller.SellerResDto;
 import com.rishikesh.contracts.exception.EmailAlreadyExistException;
 import com.rishikesh.user.dto.*;
+import com.rishikesh.user.entity.SellerEntity;
 import com.rishikesh.user.entity.UserEntity;
 import com.rishikesh.user.jwt.JwtUtils;
+import com.rishikesh.user.repository.SellerRepo;
 import com.rishikesh.user.repository.UserRepo;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
@@ -16,6 +21,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 import java.security.SecureRandom;
+import java.util.List;
 
 
 @Component
@@ -30,13 +36,20 @@ public class UserService {
     private final UserMapper userMapper;
     private final UserRepo userRepo;
     private final Services service;
+    private final SellerRepo sellerRepo;
 
-    public UserService(AuthenticationManager authManager, JwtUtils jwtUtils, UserMapper userMapper, UserRepo userRepo, Services service) {
+    public UserService(AuthenticationManager authManager,
+                       JwtUtils jwtUtils,
+                       UserMapper userMapper,
+                       UserRepo userRepo,
+                       Services service,
+                       SellerRepo sellerRepo) {
         this.authManager = authManager;
         this.jwtUtils = jwtUtils;
         this.userMapper = userMapper;
         this.userRepo = userRepo;
         this.service = service;
+        this.sellerRepo = sellerRepo;
     }
 
     public UserLoginDto userLogin(UserRequest request){
@@ -85,7 +98,6 @@ public class UserService {
         if(entity.isActive()){
             return false;
         }
-
         String otp = generate6Digit();
         service.storeOtp(email.getEmail(),otp);
         String body =  String.format(
@@ -100,8 +112,6 @@ public class UserService {
         return true;
 
     }
-
-
 
     private static String generateNumericOtp(int length) {
         if (length <= 0) throw new IllegalArgumentException("length must be > 0");
@@ -118,20 +128,30 @@ public class UserService {
 
     public boolean verifyOtp(EmailReqDto email) {
         logger.info("verifying email");
-
-
-
         boolean verified = service.checkOtp(email);
         logger.info("Verified ? {}",verified);
         if (verified){
             UserEntity entity = userRepo.findByEmail(email.getEmail()).orElse(null);
             entity.setActive(true);
             userRepo.save(entity);
-
             return true;
         }
-
         return false;
+    }
 
+    public SellerResDto addSeller(String userId,SellerReqDto sellerReqDto) {
+        if(sellerRepo.existsById(userId)){
+            return null;
+        }
+        SellerEntity seller = SellerMapper.toEntity(sellerReqDto,userId);
+        sellerRepo.save(seller);
+        UserEntity entity = userRepo.findById(seller.getId()).orElse(null);
+        if (entity != null) {
+            List<ROLE> roles = entity.getRole();
+            roles.add(ROLE.SELLER);
+            entity.setRole(roles);
+            userRepo.save(entity);
+        }
+        return SellerMapper.toDto(seller);
     }
 }

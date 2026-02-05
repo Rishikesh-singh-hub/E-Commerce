@@ -1,14 +1,13 @@
 package com.rishikesh.product.controller;
 
 import com.rishikesh.product.dto.product.ProductResDto;
-import com.rishikesh.product.dto.seller.SellerReqDto;
-import com.rishikesh.product.dto.seller.SellerResDto;
+import com.rishikesh.contracts.dto.seller.SellerReqDto;
+import com.rishikesh.contracts.dto.seller.SellerResDto;
 import com.rishikesh.product.service.SellerService;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;

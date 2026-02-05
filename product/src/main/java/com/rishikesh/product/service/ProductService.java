@@ -8,7 +8,6 @@ import com.rishikesh.product.entity.ProductEntity;
 import com.rishikesh.product.entity.SellerEntity;
 import com.rishikesh.product.mapper.ProductMapper;
 import com.rishikesh.product.repository.ProductRepo;
-import com.rishikesh.product.repository.SellerRepo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;

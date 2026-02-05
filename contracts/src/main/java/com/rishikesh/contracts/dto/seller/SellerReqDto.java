@@ -1,4 +1,5 @@
-package com.rishikesh.product.dto.seller;
+package com.rishikesh.contracts.dto.seller;
+
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;

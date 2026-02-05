@@ -1,7 +1,9 @@
-package com.rishikesh.product.dto.seller;
+package com.rishikesh.user.dto;
 
-import com.rishikesh.product.entity.SellerEntity;
-import com.rishikesh.product.entity.SellerStatus;
+import com.rishikesh.contracts.dto.seller.SellerReqDto;
+import com.rishikesh.contracts.dto.seller.SellerResDto;
+import com.rishikesh.user.entity.SellerEntity;
+import com.rishikesh.contracts.dto.seller.SellerStatus;
 
 import java.time.Instant;
 
@@ -10,7 +12,7 @@ public class SellerMapper {
     public static SellerEntity toEntity(SellerReqDto req, String userId) {
 
         SellerEntity seller = new SellerEntity();
-        seller.setUserId(userId);
+        seller.setId(userId);
         seller.setShopName(req.getShopName());
         seller.setGstNumber(req.getGstNumber());
         seller.setShopAddress(req.getShopAddress());
@@ -26,7 +28,6 @@ public class SellerMapper {
     public static SellerResDto toDto(SellerEntity seller) {
 
         return SellerResDto.builder()
-                .sellerId(seller.getId())
                 .shopName(seller.getShopName())
                 .shopAddress(seller.getShopAddress())
                 .gstNumber(seller.getGstNumber())

@@ -1,4 +1,4 @@
-package com.rishikesh.product.entity;
+package com.rishikesh.contracts.dto.seller;
 
 public enum SellerStatus {
 

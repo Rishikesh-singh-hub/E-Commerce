@@ -33,7 +33,8 @@ public class SecurityConfig {
                                 "/auth/.well-known/jwks.json",
                                 "/api/user/signup").permitAll()
                         .requestMatchers("/internal/**").permitAll()
-                        .anyRequest().authenticated()
+                        .requestMatchers("/api/user/auth",
+                                "/api/user/auth/**").authenticated()
                 )
                 .oauth2ResourceServer(
                         oauth2 -> oauth2
